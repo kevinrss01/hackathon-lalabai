@@ -12,7 +12,6 @@ backend/
 │   ├── config/         # Application configuration
 │   ├── controllers/    # Request handlers
 │   ├── services/       # Business logic
-│   ├── models/         # Data models (ready for your ORM)
 │   ├── routes/         # Route definitions
 │   ├── middlewares/    # Express middlewares
 │   ├── utils/          # Utilities and helpers
@@ -28,7 +27,7 @@ backend/
 
 ## Prerequisites
 
-- Node.js (v18 or higher recommended)
+- Node.js (v20 or higher recommended)
 - pnpm (package manager)
 
 ## Installation
