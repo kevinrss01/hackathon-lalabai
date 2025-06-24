@@ -1,0 +1,17 @@
+{
+  "name": "hackathon-lalabai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hackathon Lalabai project with frontend and backend",
+  "scripts": {
+    "prepare": "husky install",
+    "postinstall": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^9.0.11"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}
