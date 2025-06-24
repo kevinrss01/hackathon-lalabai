@@ -27,9 +27,9 @@ const AppPage = () => {
 
   return (
     <div className="h-screen bg-linear-115 from-[#fff1be] from-28% via-[#ee87cb] via-70% to-[#b060ff]">
-      <div className="h-[40rem] flex flex-col justify-center  items-center px-4">
-        <h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl dark:text-white text-black">
-          Ask Aceternity UI Anything
+      <div className="h-screen flex flex-col justify-center items-center px-4">
+        <h2 className="mb-4 sm:mb-8 text-xl text-center sm:text-5xl dark:text-white text-black">
+          Ask your travel questions
         </h2>
         <PlaceholdersAndVanishInput
           placeholders={placeholders}
