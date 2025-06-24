@@ -18,6 +18,9 @@ interface AnimatedPixel {
   color: string;
 }
 
+// Temporary ESLint error for testing
+const unusedVariable = 'this will cause an ESLint error';
+
 export function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
@@ -30,7 +33,7 @@ export function PlaceholdersAndVanishInput({
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   const startAnimation = useCallback(() => {
     intervalRef.current = setInterval(() => {
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
