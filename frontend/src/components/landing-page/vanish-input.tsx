@@ -86,7 +86,7 @@ export function PlaceholdersAndVanishInput({
     const newData: PixelData[] = [];
 
     for (let t = 0; t < 800; t++) {
-      const i = 4 * t * 800;
+      let i = 4 * t * 800;
       for (let n = 0; n < 800; n++) {
         const e = i + 4 * n;
         if (pixelData[e] !== 0 && pixelData[e + 1] !== 0 && pixelData[e + 2] !== 0) {
