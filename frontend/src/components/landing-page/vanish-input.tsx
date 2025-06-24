@@ -18,9 +18,6 @@ interface AnimatedPixel {
   color: string;
 }
 
-// Temporary ESLint error for testing
-const unusedVariable = 'this will cause an ESLint error';
-
 export function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
@@ -89,7 +86,7 @@ export function PlaceholdersAndVanishInput({
     const newData: PixelData[] = [];
 
     for (let t = 0; t < 800; t++) {
-      let i = 4 * t * 800;
+      const i = 4 * t * 800;
       for (let n = 0; n < 800; n++) {
         const e = i + 4 * n;
         if (pixelData[e] !== 0 && pixelData[e + 1] !== 0 && pixelData[e + 2] !== 0) {
