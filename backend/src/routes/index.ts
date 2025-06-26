@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import exampleRoutes from './example.routes';
+import transcribeRoutes from './transcribe.routes';
 
 const router: Router = Router();
 
@@ -15,8 +16,6 @@ router.get('/health', (_req, res) => {
 // Mount route modules
 router.use('/examples', exampleRoutes);
 
-// Add more route modules here as your API grows
-// router.use('/users', userRoutes);
-// router.use('/auth', authRoutes);
+router.use('/transcribe', transcribeRoutes);
 
 export default router;

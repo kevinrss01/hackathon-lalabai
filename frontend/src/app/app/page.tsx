@@ -4,6 +4,7 @@ import { PlaceholdersAndVanishInput } from '@/components/landing-page/vanish-inp
 import React from 'react';
 
 const AppPage = () => {
+  const [data, setData] = React.useState('');
   const placeholders = [
     'Find me the best hotels in Paris for March 2024',
     "What's the weather like in Tokyo in April?",
@@ -18,11 +19,19 @@ const AppPage = () => {
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
+    setData(e.target.value);
   };
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('submitted');
+    const res = await fetch('http://localhost:4000/api/transcribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data }),
+    });
+    const dataTranscribed = await res.json();
+    console.log('data recu', dataTranscribed);
   };
 
   return (
