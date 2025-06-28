@@ -7,6 +7,7 @@ import React from 'react';
 import { Button, Spinner } from '@heroui/react';
 import { FaMicrophone } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { displayToast } from '@/utils/sonnerToast';
 
 const AppPage = () => {
   const [data, setData] = React.useState('');
@@ -94,7 +95,7 @@ const AppPage = () => {
         const formData = new FormData();
         formData.append('audio', audioBlob, 'recording.webm');
 
-        const response = await fetch('http://localhost:4000/api/transcribe', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transcribe`, {
           method: 'POST',
           body: formData,
         });
@@ -104,6 +105,9 @@ const AppPage = () => {
           console.log('Transcription reçu audio:', result);
         }
       } catch (error) {
+        displayToast.error(
+          'An error occurred while sending your request. Please try again or contact us.'
+        );
         console.error('Error sending audioBlob to server:', error);
       } finally {
         setTranscription(false);
@@ -145,9 +149,12 @@ const AppPage = () => {
         >
           <span className="text-2xl md:text-4xl font-bold text-black">What do you want to</span>
           <div className="min-w-20 w-20">
-            <ContainerTextFlip words={['see', 'eat', 'buy']} />
+            <ContainerTextFlip
+              words={['see', 'eat', 'buy']}
+              images={['/images/plane.png', '/images/food.png', '/images/shopping.png']}
+            />
           </div>
-          <span className="text-2xl md:text-4xl font-bold text-black ml-3">?</span>
+          <span className="text-2xl md:text-4xl font-bold text-black ml-[65px]">?</span>
         </motion.div>
 
         <motion.div
@@ -160,6 +167,7 @@ const AppPage = () => {
             placeholders={placeholders}
             onChange={handleChange}
             onSubmitAction={onSubmit}
+            isRecording={recording}
           />
           <Button
             disabled={transcription}

@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useState, useEffect, useId } from 'react';
-
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { cn } from '@/utils/cn';
 
 export interface ContainerTextFlipProps {
   /** Array of words to cycle through in the animation */
   words?: string[];
+  /** Array of image paths corresponding to each word */
+  images?: string[];
   /** Time in milliseconds between word transitions */
   interval?: number;
   /** Additional CSS classes to apply to the container */
@@ -20,6 +22,7 @@ export interface ContainerTextFlipProps {
 
 export function ContainerTextFlip({
   words = ['better', 'modern', 'beautiful', 'awesome'],
+  images = [],
   interval = 3000,
   className,
   textClassName,
@@ -29,13 +32,14 @@ export function ContainerTextFlip({
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [width, setWidth] = useState(100);
   const textRef = React.useRef(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const updateWidthForWord = () => {
-    if (textRef.current) {
-      // Add some padding to the text width (30px on each side)
+    if (containerRef.current) {
+      // Get the width of the entire container including text and image
       // @ts-ignore
-      const textWidth = textRef.current.scrollWidth + 30;
-      setWidth(textWidth);
+      const containerWidth = containerRef.current.scrollWidth;
+      setWidth(containerWidth);
     }
   };
 
@@ -53,6 +57,8 @@ export function ContainerTextFlip({
     return () => clearInterval(intervalId);
   }, [words, interval]);
 
+  const currentImage = images[currentWordIndex];
+
   return (
     <motion.div
       layout
@@ -69,36 +75,70 @@ export function ContainerTextFlip({
       )}
       key={words[currentWordIndex]}
     >
-      <motion.div
-        transition={{
-          duration: animationDuration / 1000,
-          ease: 'easeInOut',
-        }}
-        className={cn('inline-block', textClassName)}
-        ref={textRef}
-        layoutId={`word-div-${words[currentWordIndex]}-${id}`}
-      >
-        <motion.div className="inline-block">
-          {words[currentWordIndex].split('').map((letter, index) => (
-            <motion.span
-              key={index}
-              initial={{
-                opacity: 0,
-                filter: 'blur(10px)',
-              }}
-              animate={{
-                opacity: 1,
-                filter: 'blur(0px)',
-              }}
-              transition={{
-                delay: index * 0.02,
-              }}
-            >
-              {letter}
-            </motion.span>
-          ))}
+      <div ref={containerRef} className="flex items-center justify-center gap-3 px-4">
+        <motion.div
+          transition={{
+            duration: animationDuration / 1000,
+            ease: 'easeInOut',
+          }}
+          className={cn('inline-block', textClassName)}
+          ref={textRef}
+          layoutId={`word-div-${words[currentWordIndex]}-${id}`}
+        >
+          <motion.div className="inline-block relative top-[1px]">
+            {words[currentWordIndex].split('').map((letter, index) => (
+              <motion.span
+                key={index}
+                initial={{
+                  opacity: 0,
+                  filter: 'blur(10px)',
+                }}
+                animate={{
+                  opacity: 1,
+                  filter: 'blur(0px)',
+                }}
+                transition={{
+                  delay: index * 0.02,
+                }}
+              >
+                {letter}
+              </motion.span>
+            ))}
+          </motion.div>
         </motion.div>
-      </motion.div>
+
+        {currentImage && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 0.8,
+              filter: 'blur(10px)',
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              filter: 'blur(0px)',
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.8,
+              filter: 'blur(10px)',
+            }}
+            transition={{
+              duration: animationDuration / 1000,
+              ease: 'easeInOut',
+            }}
+            className="relative h-8 w-8 md:h-10 md:w-10 top-[1px]"
+          >
+            <Image
+              src={currentImage}
+              alt={words[currentWordIndex]}
+              fill
+              className="object-contain"
+            />
+          </motion.div>
+        )}
+      </div>
     </motion.div>
   );
 }

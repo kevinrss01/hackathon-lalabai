@@ -18,8 +18,6 @@ export const FloatingNav = ({
   logo?: JSX.Element;
 }) => {
   // Always visible - no need for scroll tracking
-  const visible = true;
-
   return (
     <AnimatePresence mode="wait">
       <motion.div

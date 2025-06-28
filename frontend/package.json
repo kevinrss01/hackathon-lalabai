@@ -6,13 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:watch": "nodemon --watch 'src/**/*.{ts,tsx}' --exec 'pnpm lint' --ext ts,tsx"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@headlessui/tailwindcss": "^0.2.2",
     "@heroicons/react": "^2.2.0",
     "@heroui/react": "^2.7.11",
+    "@heroui/toast": "^2.0.12",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^3.52.2",
     "clsx": "^2.1.1",
@@ -26,6 +28,7 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-use-measure": "^2.1.7",
+    "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-motion": "^1.1.1"

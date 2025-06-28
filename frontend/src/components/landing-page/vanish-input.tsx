@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 // Define proper types for pixel data
@@ -22,20 +22,29 @@ export const PlaceholdersAndVanishInput = React.memo(function PlaceholdersAndVan
   placeholders,
   onChange,
   onSubmitAction,
+  isRecording,
 }: {
   placeholders: string[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmitAction: (e: React.FormEvent<HTMLFormElement>) => void;
+  isRecording: boolean;
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  useEffect(() => {
+    if (isRecording) {
+      setCurrentPlaceholder(0);
+    }
+  }, [isRecording]);
+
   const startAnimation = useCallback(() => {
     intervalRef.current = setInterval(() => {
+      if (isRecording) return;
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
     }, 6000); // Changed from 3000ms to 6000ms (6 seconds)
-  }, [placeholders.length]);
+  }, [placeholders.length, isRecording]);
 
   const handleVisibilityChange = useCallback(() => {
     if (document.visibilityState !== 'visible' && intervalRef.current) {
@@ -63,6 +72,11 @@ export const PlaceholdersAndVanishInput = React.memo(function PlaceholdersAndVan
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState('');
   const [animating, setAnimating] = useState(false);
+
+  const currentPlaceHolderText = useMemo(() => {
+    if (isRecording) return 'Recording in progress...';
+    return placeholders[currentPlaceholder];
+  }, [currentPlaceholder, isRecording, placeholders]);
 
   const draw = useCallback(() => {
     if (!inputRef.current) return;
@@ -153,6 +167,7 @@ export const PlaceholdersAndVanishInput = React.memo(function PlaceholdersAndVan
         }
       });
     };
+    if (isRecording) return;
     animateFrame(start);
   };
 
@@ -188,7 +203,8 @@ export const PlaceholdersAndVanishInput = React.memo(function PlaceholdersAndVan
     <form
       className={cn(
         'w-full relative max-w-xl mx-auto bg-white  h-12 rounded-full overflow-hidden shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200',
-        value && 'bg-gray-50'
+        value && 'bg-gray-50',
+        isRecording && 'bg-gray-50 cursor-not-allowed pointer-events-none opacity-80'
       )}
       onSubmit={handleSubmit}
     >
@@ -278,7 +294,7 @@ export const PlaceholdersAndVanishInput = React.memo(function PlaceholdersAndVan
               }}
               className="dark:text-zinc-500 text-sm sm:text-base font-normal text-neutral-500 pl-4 sm:pl-12 text-left w-[calc(100%-2rem)] truncate"
             >
-              {placeholders[currentPlaceholder]}
+              {currentPlaceHolderText}
             </motion.p>
           )}
         </AnimatePresence>

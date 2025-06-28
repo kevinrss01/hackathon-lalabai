@@ -18,11 +18,11 @@ export class AgentService {
       instructions: instructions.travelAgent,
     });
 
-    this.agent.on('agent_start', (ctx, agent) => {
+    this.agent.on('agent_start', (_, agent) => {
       console.log(`[${agent.name}] started`);
     });
 
-    this.agent.on('agent_end', (ctx, output) => {
+    this.agent.on('agent_end', (_, output) => {
       console.log(`[${this.agent.name}] produced:`, output);
     });
   }
