@@ -1,4 +1,4 @@
-import { SpeechToTextService } from '@/services/speechToText.service';
+import { AssistantOrchestratorService } from '@/services/assistantOrchestrator.service';
 import { Request, Response } from 'express';
 import { z } from 'zod';
 
@@ -6,36 +6,53 @@ const textValidator = z.object({
   data: z.string().min(1, 'The text data must not be empty').trim(),
 });
 
-export class TranscribeController {
-  private SpeechToTextService = new SpeechToTextService();
+export type AudioFile = {
+  buffer: Buffer;
+  mimetype: string;
+  originalname?: string;
+  size: number;
+};
 
-  process = async (req: Request, res: Response): Promise<void> => {
-    let textData: string | undefined;
-    let transcription = null as string | null;
+export class TranscribeController {
+  private assistantOrchestratorService = new AssistantOrchestratorService();
+  private extractInput(req: Request) {
+    const input: { text?: string; audioFile?: AudioFile } = {};
 
     if (req.body) {
       const result = textValidator.safeParse(req.body);
-      if (result.success) textData = result.data.data;
+      if (result.success) {
+        input.text = result.data.data;
+      }
     }
 
-    if (textData) transcription = textData;
-
     if (req.file && req.file.mimetype.startsWith('audio/')) {
-      const transcriptionResult = await this.SpeechToTextService.transcribeAudio({
+      input.audioFile = {
         buffer: req.file.buffer,
         mimetype: req.file.mimetype,
         originalname: req.file.originalname,
         size: req.file.size,
-      });
-
-      transcription = transcriptionResult;
+      };
     }
 
-    if (!transcription) {
-      res.status(400).json({ error: 'No valid audio file or text data provided.' });
+    return input;
+  }
+
+  process = async (req: Request, res: Response): Promise<void> => {
+    const input = this.extractInput(req);
+    if (!input.text && !input.audioFile) {
+      res
+        .status(400)
+        .json({ error: 'No valid input provided. Please provide either text or an audio file.' });
       return;
     }
 
-    res.json({ success: true, transcription });
+    await this.assistantOrchestratorService.processRequest(input);
+
+    // res.json({
+    //   success: true,
+    //   response: result.response,
+    //   inputType: result.inputType,
+    //   originalInput: result.originalInput,
+    // });
   };
 }
