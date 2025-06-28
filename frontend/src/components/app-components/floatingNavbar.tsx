@@ -17,7 +17,6 @@ export const FloatingNav = ({
   className?: string;
   logo?: JSX.Element;
 }) => {
-  // Always visible - no need for scroll tracking
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -38,18 +37,20 @@ export const FloatingNav = ({
         )}
       >
         {logo && <div className="mr-1">{logo}</div>}
-        {navItems.map((navItem: any, idx: number) => (
-          <a
-            key={`link=${idx}`}
-            href={navItem.link}
-            className={cn(
-              'relative dark:text-neutral-50 items-center flex space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500 px-2'
-            )}
-          >
-            <span className="block sm:hidden">{navItem.icon}</span>
-            <span className="hidden sm:block text-sm">{navItem.name}</span>
-          </a>
-        ))}
+        {navItems.map(
+          (navItem: { name: string; link: string; icon?: JSX.Element }, idx: number) => (
+            <a
+              key={`link=${idx}`}
+              href={navItem.link}
+              className={cn(
+                'relative dark:text-neutral-50 items-center flex space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500 px-2'
+              )}
+            >
+              <span className="block sm:hidden">{navItem.icon}</span>
+              <span className="hidden sm:block text-sm">{navItem.name}</span>
+            </a>
+          )
+        )}
         <button className="border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full">
           <span>Login</span>
           <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
