@@ -31,68 +31,80 @@ const AppPage = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!data.trim()) return;
+
+    setTranscription(true);
+
     const res = await fetch('http://localhost:4000/api/transcribe', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ data }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data: data.trim() }),
     });
-    const dataTranscribed = await res.json();
-    console.log('data recu', dataTranscribed);
+
+    const result = await res.json();
+    console.log('txt:', result);
+
+    setTranscription(false);
   };
 
   const startRecording = async () => {
-    try {
-      audioChunksRef.current = [];
+    audioChunksRef.current = [];
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+      },
+    });
+    streamRef.current = stream;
 
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
+    const mediaRecorder = new MediaRecorder(stream, {
+      mimeType: 'audio/webm; codecs=opus',
+      audioBitsPerSecond: 128000,
+    });
+    mediaRecorderRef.current = mediaRecorder;
 
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) audioChunksRef.current.push(event.data);
-      };
+    mediaRecorder.onstart = () => setRecording(true);
 
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) audioChunksRef.current.push(event.data);
+    };
 
-        if (streamRef.current) streamRef.current.getTracks().forEach((track) => track.stop());
+    mediaRecorder.onstop = async () => {
+      const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
 
-        setTranscription(true);
+      if (streamRef.current) streamRef.current.getTracks().forEach((track) => track.stop());
 
-        try {
-          const formData = new FormData();
-          formData.append('audio', audioBlob, 'recording.webm');
+      setTranscription(true);
 
-          const response = await fetch('http://localhost:4000/api/transcribe', {
-            method: 'POST',
-            body: formData,
-          });
+      try {
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.webm');
 
-          if (response.ok) {
-            const result = await response.json();
-            console.log('Transcription reçu audio:', result);
-          }
-        } catch (error) {
-          console.error('Error sending audioBlob to server:', error);
-        } finally {
-          setTranscription(false);
+        const response = await fetch('http://localhost:4000/api/transcribe', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('Transcription reçu audio:', result);
         }
-      };
+      } catch (error) {
+        console.error('Error sending audioBlob to server:', error);
+      } finally {
+        setTranscription(false);
+      }
+    };
 
-      mediaRecorder.start();
-      setRecording(true);
-    } catch (error) {
-      alert('error during recording' + error);
-    }
+    mediaRecorder.start();
+    setRecording(true);
   };
 
   const stopRecording = () => {
     if (!mediaRecorderRef.current || !recording) return;
-
     mediaRecorderRef.current.stop();
     setRecording(false);
   };
@@ -104,7 +116,9 @@ const AppPage = () => {
 
   React.useEffect(() => {
     return () => {
-      if (streamRef.current) streamRef.current.getTracks().forEach((track) => track.stop());
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+      }
     };
   }, []);
 
@@ -114,6 +128,7 @@ const AppPage = () => {
         <h2 className="mb-4 sm:mb-8 text-xl text-center sm:text-5xl dark:text-white text-black">
           Ask your travel questions
         </h2>
+
         <PlaceholdersAndVanishInput
           placeholders={placeholders}
           onChange={handleChange}

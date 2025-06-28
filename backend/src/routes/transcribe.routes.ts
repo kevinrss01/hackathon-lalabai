@@ -1,11 +1,17 @@
 import { Router } from 'express';
 import { asyncHandler } from '../utils/asyncHandler';
 import { TranscribeController } from '@/controllers/transcribe.controller';
+import multer from 'multer';
 
 const router: Router = Router();
 const transcribeController = new TranscribeController();
 
-router.post('/', asyncHandler(transcribeController.process));
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 25 * 1024 * 1024 },
+});
+
+router.post('/', upload.single('audio'), asyncHandler(transcribeController.process));
 
 // router.get('/:id', asyncHandler(transcribeController.getById));
 // router.post('/', asyncHandler(transcribeController.create));
