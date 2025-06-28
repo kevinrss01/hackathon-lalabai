@@ -1,7 +1,12 @@
 'use client';
 
 import { PlaceholdersAndVanishInput } from '@/components/landing-page/vanish-input';
+import { ContainerTextFlip } from '@/components/ui/containerTextFlip';
+import Navbar from '@/components/app-components/Navbar';
 import React from 'react';
+import { Button, Spinner } from '@heroui/react';
+import { FaMicrophone } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 const AppPage = () => {
   const [data, setData] = React.useState('');
@@ -12,41 +17,47 @@ const AppPage = () => {
   const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
   const streamRef = React.useRef<MediaStream | null>(null);
 
-  const placeholders = [
-    'Find me the best hotels in Paris for March 2024',
-    "What's the weather like in Tokyo in April?",
-    'Top attractions to visit in New York City',
-    'Flight deals from Madrid to Rome in July',
-    'Best time to visit the Great Wall of China',
-    'Cultural festivals in India during November',
-    'Affordable hostels in Barcelona',
-    'Must-try foods in Bangkok',
-    'Visa requirements for traveling to Australia',
-    'How to get around in Amsterdam',
-  ];
+  const placeholders = React.useMemo(
+    () => [
+      'Find me the best hotels in Paris for March 2024',
+      "What's the weather like in Tokyo in April?",
+      'Top attractions to visit in New York City',
+      'Flight deals from Madrid to Rome in July',
+      'Best time to visit the Great Wall of China',
+      'Cultural festivals in India during November',
+      'Affordable hostels in Barcelona',
+      'Must-try foods in Bangkok',
+      'Visa requirements for traveling to Australia',
+      'How to get around in Amsterdam',
+    ],
+    []
+  );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setData(e.target.value);
-  };
+  }, []);
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = React.useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-    if (!data.trim()) return;
+      if (!data.trim()) return;
 
-    setTranscription(true);
+      setTranscription(true);
 
-    const res = await fetch('http://localhost:4000/api/transcribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data: data.trim() }),
-    });
+      const res = await fetch('http://localhost:4000/api/transcribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: data.trim() }),
+      });
 
-    const result = await res.json();
-    console.log('txt:', result);
+      const result = await res.json();
+      console.log('txt:', result);
 
-    setTranscription(false);
-  };
+      setTranscription(false);
+    },
+    [data]
+  );
 
   const startRecording = async () => {
     audioChunksRef.current = [];
@@ -123,37 +134,52 @@ const AppPage = () => {
   }, []);
 
   return (
-    <div className="h-screen bg-linear-115 from-[#fff1be] from-28% via-[#ee87cb] via-70% to-[#b060ff]">
-      <div className="h-screen flex flex-col justify-center items-center px-4">
-        <h2 className="mb-4 sm:mb-8 text-xl text-center sm:text-5xl dark:text-white text-black">
-          Ask your travel questions
-        </h2>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex-1 flex flex-col justify-center items-center px-4">
+        <motion.div
+          className="flex items-center gap-2 mb-5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+        >
+          <span className="text-2xl md:text-4xl font-bold text-black">What do you want to</span>
+          <div className="min-w-20 w-20">
+            <ContainerTextFlip words={['see', 'eat', 'buy']} />
+          </div>
+          <span className="text-2xl md:text-4xl font-bold text-black ml-3">?</span>
+        </motion.div>
 
-        <PlaceholdersAndVanishInput
-          placeholders={placeholders}
-          onChange={handleChange}
-          onSubmit={onSubmit}
-        />
-
-        <div className="mt-8 flex flex-col items-center gap-4">
-          <button
+        <motion.div
+          className="w-full flex items-center justify-center max-w-3xl relative"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
+        >
+          <PlaceholdersAndVanishInput
+            placeholders={placeholders}
+            onChange={handleChange}
+            onSubmitAction={onSubmit}
+          />
+          <Button
             disabled={transcription}
-            onClick={handleRecording}
-            className={`px-6 py-3 rounded-lg font-semibold ${
+            onPress={handleRecording}
+            isIconOnly
+            className={`w-12 h-12 min-w-12 rounded-3xl relative right-[60px] ${
               recording
-                ? 'bg-red-500 hover:bg-red-600 text-white'
+                ? 'bg-red-500 hover:bg-red-600'
                 : transcription
-                  ? 'bg-gray-400 cursor-not-allowed text-white'
-                  : 'bg-blue-500 hover:bg-blue-600 text-white'
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-black hover:bg-gray-800'
             }`}
           >
-            {recording
-              ? "🛑 Arrêter l'enregistrement"
-              : transcription
-                ? '🔄 Transcription...'
-                : "🎤 Démarrer l'enregistrement"}
-          </button>
-        </div>
+            {recording || transcription ? (
+              <Spinner color="white" size="md" />
+            ) : (
+              <FaMicrophone className="text-white text-lg" />
+            )}
+          </Button>
+        </motion.div>
       </div>
     </div>
   );

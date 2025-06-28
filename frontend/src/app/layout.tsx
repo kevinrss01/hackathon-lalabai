@@ -1,17 +1,18 @@
-import '@/styles/tailwind.css'
-import type { Metadata } from 'next'
+import '@/styles/tailwind.css';
+import type { Metadata } from 'next';
+import { Providers } from '@/components/app-components/providers';
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - Radiant',
-    default: 'Radiant - Close every deal',
+    template: '%s - Agentive',
+    default: 'Agentive - Close every deal',
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -23,11 +24,13 @@ export default function RootLayout({
         <link
           rel="alternate"
           type="application/rss+xml"
-          title="The Radiant Blog"
+          title="The Agentive Blog"
           href="/blog/feed.xml"
         />
       </head>
-      <body className="text-gray-950 antialiased">{children}</body>
+      <body className="text-gray-950 antialiased">
+        <Providers>{children}</Providers>
+      </body>
     </html>
-  )
+  );
 }

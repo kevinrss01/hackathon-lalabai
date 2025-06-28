@@ -1,30 +1,22 @@
-import { clsx } from 'clsx'
+import { clsx } from 'clsx';
 
-export function Screenshot({
-  width,
-  height,
-  src,
-  className,
-}: {
-  width: number
-  height: number
-  src: string
-  className?: string
-}) {
+interface ScreenshotProps {
+  width: number;
+  height: number;
+  src: string;
+  className?: string;
+}
+
+export const Screenshot = ({ width, height, src }: ScreenshotProps) => {
   return (
     <div
-      style={{ '--width': width, '--height': height } as React.CSSProperties}
-      className={clsx(
-        className,
-        'relative aspect-[var(--width)/var(--height)] [--radius:var(--radius-xl)]',
-      )}
+      className="relative"
+      style={{
+        aspectRatio: `${width}/${height}`,
+      }}
     >
-      <div className="absolute -inset-(--padding) rounded-[calc(var(--radius)+var(--padding))] shadow-xs ring-1 ring-black/5 [--padding:--spacing(2)]" />
-      <img
-        alt=""
-        src={src}
-        className="h-full rounded-(--radius) shadow-2xl ring-1 ring-black/10"
-      />
+      <div className="absolute -inset-2 rounded-xl shadow-xs ring-1 ring-black/5" />
+      <img alt="" src={src} className="h-full rounded-xl shadow-2xl ring-1 ring-black/10" />
     </div>
-  )
-}
+  );
+};

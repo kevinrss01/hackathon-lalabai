@@ -1,16 +1,16 @@
-import { Button } from '@/components/landing-page/button'
-import { GradientBackground } from '@/components/landing-page/gradient'
-import { Link } from '@/components/landing-page/link'
-import { Mark } from '@/components/landing-page/logo'
-import { Checkbox, Field, Input, Label } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/16/solid'
-import { clsx } from 'clsx'
-import type { Metadata } from 'next'
+import { Button } from '@/components/landing-page/button';
+import { GradientBackground } from '@/components/landing-page/gradient';
+import { Link } from '@/components/landing-page/link';
+import { Mark } from '@/components/landing-page/logo';
+import { Checkbox, Field, Input, Label } from '@headlessui/react';
+import { CheckIcon } from '@heroicons/react/16/solid';
+import { clsx } from 'clsx';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Login',
   description: 'Sign in to your account to continue.',
-}
+};
 
 export default function Login() {
   return (
@@ -25,9 +25,7 @@ export default function Login() {
               </Link>
             </div>
             <h1 className="mt-8 text-base/6 font-medium">Welcome back!</h1>
-            <p className="mt-1 text-sm/5 text-gray-600">
-              Sign in to your account to continue.
-            </p>
+            <p className="mt-1 text-sm/5 text-gray-600">Sign in to your account to continue.</p>
             <Field className="mt-8 space-y-3">
               <Label className="text-sm/5 font-medium">Email</Label>
               <Input
@@ -36,9 +34,9 @@ export default function Login() {
                 type="email"
                 name="email"
                 className={clsx(
-                  'block w-full rounded-lg border border-transparent shadow-sm ring-1 ring-black/10',
-                  'px-[calc(--spacing(2)-1px)] py-[calc(--spacing(1.5)-1px)] text-base/6 sm:text-sm/6',
-                  'data-focus:outline-2 data-focus:-outline-offset-1 data-focus:outline-black',
+                  'px-2 py-1.5 text-base/6 sm:text-sm/6',
+                  'rounded-lg shadow-sm ring-1 ring-gray-950/10',
+                  'data-[focus]:outline data-[focus]:outline-2 data-[focus]:-outline-offset-1 data-[focus]:outline-black'
                 )}
               />
             </Field>
@@ -49,9 +47,9 @@ export default function Login() {
                 type="password"
                 name="password"
                 className={clsx(
-                  'block w-full rounded-lg border border-transparent shadow-sm ring-1 ring-black/10',
-                  'px-[calc(--spacing(2)-1px)] py-[calc(--spacing(1.5)-1px)] text-base/6 sm:text-sm/6',
-                  'data-focus:outline-2 data-focus:-outline-offset-1 data-focus:outline-black',
+                  'px-2 py-1.5 text-base/6 sm:text-sm/6',
+                  'rounded-lg shadow-sm ring-1 ring-gray-950/10',
+                  'data-[focus]:outline data-[focus]:outline-2 data-[focus]:-outline-offset-1 data-[focus]:outline-black'
                 )}
               />
             </Field>
@@ -62,7 +60,7 @@ export default function Login() {
                   className={clsx(
                     'group block size-4 rounded-sm border border-transparent shadow-sm ring-1 ring-black/10',
                     'data-checked:bg-black data-checked:ring-black',
-                    'data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-black',
+                    'data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-black'
                   )}
                 >
                   <CheckIcon className="fill-white opacity-0 group-data-checked:opacity-100" />
@@ -88,5 +86,5 @@ export default function Login() {
         </div>
       </div>
     </main>
-  )
+  );
 }

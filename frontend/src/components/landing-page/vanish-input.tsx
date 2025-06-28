@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 // Define proper types for pixel data
@@ -18,14 +18,14 @@ interface AnimatedPixel {
   color: string;
 }
 
-export function PlaceholdersAndVanishInput({
+export const PlaceholdersAndVanishInput = React.memo(function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
-  onSubmit,
+  onSubmitAction,
 }: {
   placeholders: string[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onSubmitAction: (e: React.FormEvent<HTMLFormElement>) => void;
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
@@ -34,7 +34,7 @@ export function PlaceholdersAndVanishInput({
   const startAnimation = useCallback(() => {
     intervalRef.current = setInterval(() => {
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
-    }, 3000);
+    }, 6000); // Changed from 3000ms to 6000ms (6 seconds)
   }, [placeholders.length]);
 
   const handleVisibilityChange = useCallback(() => {
@@ -179,15 +179,15 @@ export function PlaceholdersAndVanishInput({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     vanishAndSubmit();
-    if (onSubmit) {
-      onSubmit(e);
+    if (onSubmitAction) {
+      onSubmitAction(e);
     }
   };
 
   return (
     <form
       className={cn(
-        'w-full relative max-w-xl mx-auto bg-white dark:bg-zinc-800 h-12 rounded-full overflow-hidden shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200',
+        'w-full relative max-w-xl mx-auto bg-white  h-12 rounded-full overflow-hidden shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200',
         value && 'bg-gray-50'
       )}
       onSubmit={handleSubmit}
@@ -285,4 +285,4 @@ export function PlaceholdersAndVanishInput({
       </div>
     </form>
   );
-}
+});

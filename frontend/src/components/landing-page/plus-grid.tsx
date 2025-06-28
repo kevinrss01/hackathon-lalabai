@@ -1,7 +1,7 @@
-import { clsx } from "clsx";
+import { clsx } from 'clsx';
 
 export function PlusGrid({
-  className = "",
+  className = '',
   children,
 }: {
   className?: string;
@@ -11,19 +11,14 @@ export function PlusGrid({
 }
 
 export function PlusGridRow({
-  className = "",
+  className = '',
   children,
 }: {
   className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={clsx(
-        className,
-        "group/row relative isolate pt-[calc(--spacing(2)+1px)] last:pb-[calc(--spacing(2)+1px)]"
-      )}
-    >
+    <div className={clsx(className, 'group/row relative isolate pt-2 last:pb-2')}>
       <div
         aria-hidden="true"
         className="absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2"
@@ -39,54 +34,43 @@ export function PlusGridRow({
 }
 
 export function PlusGridItem({
-  className = "",
+  className = '',
   children,
 }: {
   className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className={clsx(className, "group/item relative")}>
-      <PlusGridIcon
-        placement="top left"
-        className="hidden group-first/item:block"
-      />
+    <div className={clsx(className, 'group/item relative')}>
+      <PlusGridIcon placement="top left" className="hidden group-first/item:block" />
       <PlusGridIcon placement="top right" />
       <PlusGridIcon
         placement="bottom left"
         className="hidden group-first/item:group-last/row:block"
       />
-      <PlusGridIcon
-        placement="bottom right"
-        className="hidden group-last/row:block"
-      />
+      <PlusGridIcon placement="bottom right" className="hidden group-last/row:block" />
       {children}
     </div>
   );
 }
 
 export function PlusGridIcon({
-  className = "",
+  className = '',
   placement,
 }: {
   className?: string;
-  placement: `${"top" | "bottom"} ${"right" | "left"}`;
+  placement: `${'top' | 'bottom'} ${'right' | 'left'}`;
 }) {
-  const [yAxis, xAxis] = placement.split(" ");
+  const [yAxis, xAxis] = placement.split(' ');
 
-  const yClass = yAxis === "top" ? "-top-2" : "-bottom-2";
-  const xClass = xAxis === "left" ? "-left-2" : "-right-2";
+  const yClass = yAxis === 'top' ? '-top-2' : '-bottom-2';
+  const xClass = xAxis === 'left' ? '-left-2' : '-right-2';
 
   return (
     <svg
       viewBox="0 0 15 15"
       aria-hidden="true"
-      className={clsx(
-        className,
-        "absolute size-[15px] fill-black/10",
-        yClass,
-        xClass
-      )}
+      className={clsx(className, 'absolute size-[15px] fill-black/10', yClass, xClass)}
     >
       <path d="M8 0H7V7H0V8H7V15H8V8H15V7H8V0Z" />
     </svg>

@@ -1,9 +1,12 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --font-sans: Switzer, system-ui, sans-serif;
-
-  --radius-4xl: 2rem;
+@layer base {
+  :root {
+    --font-sans: Switzer, system-ui, sans-serif;
+    --radius-4xl: 2rem;
+  }
 }
 
 @keyframes move-x {
