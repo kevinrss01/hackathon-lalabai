@@ -12,4 +12,7 @@ router.post('/', asyncHandler(exampleController.create));
 router.put('/:id', asyncHandler(exampleController.update));
 router.delete('/:id', asyncHandler(exampleController.delete));
 
+// Travel research route
+router.post('/travel/research', exampleController.researchTravel);
+
 export default router;

@@ -1,13 +1,17 @@
 import { Request, Response } from 'express';
 import { ExampleService } from '../services/example.service';
+import { AgentService } from '../services/agent.service';
 import { AppError } from '../utils/AppError';
 import { IExample } from '../types/example.types';
+import { asyncHandler } from '../utils/asyncHandler';
 
 export class ExampleController {
   private exampleService: ExampleService;
+  private agentService: AgentService;
 
   constructor() {
     this.exampleService = new ExampleService();
+    this.agentService = new AgentService();
   }
 
   getAll = async (_req: Request, res: Response): Promise<void> => {
@@ -36,7 +40,9 @@ export class ExampleController {
   };
 
   create = async (req: Request, res: Response): Promise<void> => {
-    const newExample = await this.exampleService.create(req.body as Omit<IExample, 'id' | 'createdAt'>);
+    const newExample = await this.exampleService.create(
+      req.body as Omit<IExample, 'id' | 'createdAt'>
+    );
 
     res.status(201).json({
       success: true,
@@ -78,4 +84,26 @@ export class ExampleController {
       message: 'Example deleted successfully',
     });
   };
+
+  /**
+   * Research travel information based on user query
+   */
+  public researchTravel = asyncHandler(async (req: Request, res: Response) => {
+    const { query } = req.body as { query: string };
+
+    if (!query) {
+      res.status(400).json({
+        success: false,
+        error: 'Travel query is required',
+      });
+      return;
+    }
+
+    const travelInfo = await this.agentService.researchTravel(query);
+
+    res.status(200).json({
+      success: true,
+      data: travelInfo,
+    });
+  });
 }
