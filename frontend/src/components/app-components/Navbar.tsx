@@ -3,6 +3,7 @@ import React from 'react';
 import { HomeIcon, Cog6ToothIcon, ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
 import { FloatingNav } from './floatingNavbar';
 import { Logo } from '../landing-page/logo';
+import { motion } from 'framer-motion';
 
 const Navbar = () => {
   const navItems = [
@@ -24,9 +25,14 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="relative w-full">
+    <motion.div
+      className="relative w-full"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+    >
       <FloatingNav navItems={navItems} logo={<Logo className="h-6" />} />
-    </div>
+    </motion.div>
   );
 };
 
