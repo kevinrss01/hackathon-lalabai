@@ -1,25 +1,25 @@
-import { BentoCard } from "@/components/landing-page/bento-card";
-import { Button } from "@/components/landing-page/button";
-import { Container } from "@/components/landing-page/container";
-import { Footer } from "@/components/landing-page/footer";
-import { Gradient } from "@/components/landing-page/gradient";
-import { Keyboard } from "@/components/landing-page/keyboard";
-import { Link } from "@/components/landing-page/link";
-import { LinkedAvatars } from "@/components/landing-page/linked-avatars";
-import { LogoCloud } from "@/components/landing-page/logo-cloud";
-import { LogoCluster } from "@/components/landing-page/logo-cluster";
-import { LogoTimeline } from "@/components/landing-page/logo-timeline";
-import { Map } from "@/components/landing-page/map";
-import { Navbar } from "@/components/landing-page/navbar";
-import { Screenshot } from "@/components/landing-page/screenshot";
-import { Testimonials } from "@/components/landing-page/testimonials";
-import { Heading, Subheading } from "@/components/landing-page/text";
-import { ChevronRightIcon } from "@heroicons/react/16/solid";
-import type { Metadata } from "next";
+import { BentoCard } from '@/components/landing-page/bento-card';
+import { Button } from '@/components/landing-page/button';
+import { Container } from '@/components/landing-page/container';
+import { Footer } from '@/components/landing-page/footer';
+import { Gradient } from '@/components/landing-page/gradient';
+import { Keyboard } from '@/components/landing-page/keyboard';
+import { Link } from '@/components/landing-page/link';
+import { LinkedAvatars } from '@/components/landing-page/linked-avatars';
+import { LogoCloud } from '@/components/landing-page/logo-cloud';
+import { LogoCluster } from '@/components/landing-page/logo-cluster';
+import { LogoTimeline } from '@/components/landing-page/logo-timeline';
+import { Map } from '@/components/landing-page/map';
+import { Navbar } from '@/components/landing-page/navbar';
+import { Screenshot } from '@/components/landing-page/screenshot';
+import { Testimonials } from '@/components/landing-page/testimonials';
+import { Heading, Subheading } from '@/components/landing-page/text';
+import { ChevronRightIcon } from '@heroicons/react/16/solid';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   description:
-    "Radiant helps you sell more by revealing sensitive information about your customers.",
+    'Radiant helps you sell more by revealing sensitive information about your customers.',
 };
 
 function Hero() {
@@ -43,8 +43,7 @@ function Hero() {
             Close every deal.
           </h1>
           <p className="mt-8 max-w-lg text-xl/7 font-medium text-gray-950/75 sm:text-2xl/8">
-            Radiant helps you sell more by revealing sensitive information about
-            your customers.
+            Radiant helps you sell more by revealing sensitive information about your customers.
           </p>
           <div className="mt-12 flex flex-col gap-x-6 gap-y-4 sm:flex-row">
             <Button href="#">Get started</Button>
@@ -92,7 +91,7 @@ function BentoSection() {
           graphic={
             <div className="h-80 bg-[url(/screenshots/profile.png)] bg-size-[1000px_560px] bg-position-[left_-109px_top_-112px] bg-no-repeat" />
           }
-          fade={["bottom"]}
+          fade={['bottom']}
           className="max-lg:rounded-t-4xl lg:col-span-3 lg:rounded-tl-4xl"
         />
         <BentoCard
@@ -102,7 +101,7 @@ function BentoSection() {
           graphic={
             <div className="absolute inset-0 bg-[url(/screenshots/competitors.png)] bg-size-[1100px_650px] bg-position-[left_-38px_top_-73px] bg-no-repeat" />
           }
-          fade={["bottom"]}
+          fade={['bottom']}
           className="lg:col-span-3 lg:rounded-tr-4xl"
         />
         <BentoCard
@@ -111,7 +110,7 @@ function BentoSection() {
           description="It’s never been faster to cold email your entire contact list using our streamlined keyboard shortcuts."
           graphic={
             <div className="flex size-full pt-10 pl-10">
-              <Keyboard highlighted={["LeftCommand", "LeftShift", "D"]} />
+              <Keyboard highlighted={['LeftCommand', 'LeftShift', 'D']} />
             </div>
           }
           className="lg:col-span-2 lg:rounded-bl-4xl"
@@ -153,7 +152,7 @@ function DarkBentoSection() {
             graphic={
               <div className="h-80 bg-[url(/screenshots/networking.png)] bg-size-[851px_344px] bg-no-repeat" />
             }
-            fade={["top"]}
+            fade={['top']}
             className="max-lg:rounded-t-4xl lg:col-span-4 lg:rounded-tl-4xl"
           />
           <BentoCard
@@ -181,7 +180,7 @@ function DarkBentoSection() {
             graphic={
               <div className="h-80 bg-[url(/screenshots/engagement.png)] bg-size-[851px_344px] bg-no-repeat" />
             }
-            fade={["top"]}
+            fade={['top']}
             className="max-lg:rounded-b-4xl lg:col-span-4 lg:rounded-br-4xl"
           />
         </div>
