@@ -17,8 +17,6 @@ export const FloatingNav = ({
   className?: string;
   logo?: JSX.Element;
 }) => {
-  // Always visible - no need for scroll tracking
-  const visible = true;
 
   return (
     <AnimatePresence mode="wait">
@@ -40,7 +38,7 @@ export const FloatingNav = ({
         )}
       >
         {logo && <div className="mr-1">{logo}</div>}
-        {navItems.map((navItem: any, idx: number) => (
+        {navItems.map((navItem: { name: string; link: string; icon?: JSX.Element }, idx: number) => (
           <a
             key={`link=${idx}`}
             href={navItem.link}
