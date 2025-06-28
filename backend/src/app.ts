@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import { config } from './config/config';
 import { errorHandler } from './middlewares/errorHandler';
 import { notFoundHandler } from './middlewares/notFoundHandler';
+import { requestLogger } from './middlewares/requestLogger';
 import routes from './routes';
 
 const app: Express = express();
@@ -21,6 +22,9 @@ app.use(express.urlencoded({ extended: true }));
 if (config.env !== 'test') {
   app.use(morgan('dev'));
 }
+
+// Detailed request logging middleware
+app.use(requestLogger);
 
 // API routes
 app.use('/api', routes);

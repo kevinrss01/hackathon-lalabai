@@ -46,13 +46,11 @@ export class TranscribeController {
       return;
     }
 
-    await this.assistantOrchestratorService.processRequest(input);
+    const result = await this.assistantOrchestratorService.processRequest(input);
 
-    // res.json({
-    //   success: true,
-    //   response: result.response,
-    //   inputType: result.inputType,
-    //   originalInput: result.originalInput,
-    // });
+    res.json({
+      success: true,
+      response: result,
+    });
   };
 }

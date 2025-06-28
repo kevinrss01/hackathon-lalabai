@@ -1,4 +1,4 @@
-import { Agent, run } from '@openai/agents';
+import { Agent, run, webSearchTool } from '@openai/agents';
 import { config } from '../config/config';
 import { instructions } from './prompts/instructions';
 
@@ -13,8 +13,17 @@ export class AgentService {
   constructor() {
     this.agent = new Agent({
       name: 'Travel Research Assistant',
-      model: 'gpt-4.1',
+      model: 'o4-mini',
+      tools: [webSearchTool()],
       instructions: instructions.travelAgent,
+    });
+
+    this.agent.on('agent_start', (ctx, agent) => {
+      console.log(`[${agent.name}] started`);
+    });
+
+    this.agent.on('agent_end', (ctx, output) => {
+      console.log(`[${this.agent.name}] produced:`, output);
     });
   }
 
@@ -28,18 +37,42 @@ export class AgentService {
     sources?: string[];
   }> {
     try {
+      console.log('\n=== Starting Travel Research ===');
+      console.log(`📝 User prompt: "${prompt}"`);
+      console.log('⏳ Processing...\n');
+
+      // Run the agent
+      console.log('🤖 Agent is thinking...');
+      const startTime = Date.now();
+
       const result = await run(this.agent, prompt);
 
-      const response = result.finalOutput || 'No travel information could be generated.';
+      const endTime = Date.now();
+      const duration = ((endTime - startTime) / 1000).toFixed(2);
 
+      console.log(`\n✅ Agent completed in ${duration} seconds`);
+
+      const response = result.finalOutput || 'No travel information could be generated.';
       const sources = this.extractSources(response);
+
+      // Log summary
+      console.log('\n📊 Summary:');
+      console.log(`- Response length: ${response.length} characters`);
+      console.log(`- Sources found: ${sources.length}`);
+      if (sources.length > 0) {
+        console.log('- Sources:');
+        sources.forEach((source, index) => {
+          console.log(`  ${index + 1}. ${source}`);
+        });
+      }
+      console.log('=== Travel Research Completed ===\n');
 
       return {
         response,
         sources: sources.length > 0 ? sources : undefined,
       };
     } catch (error) {
-      console.error('Error researching travel:', error);
+      console.error('❌ Error researching travel:', error);
       throw new Error('Failed to research travel information');
     }
   }

@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import exampleRoutes from './example.routes';
 import transcribeRoutes from './transcribe.routes';
 
 const router: Router = Router();
@@ -12,9 +11,6 @@ router.get('/health', (_req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
-
-// Mount route modules
-router.use('/examples', exampleRoutes);
 
 router.use('/transcribe', transcribeRoutes);
 
