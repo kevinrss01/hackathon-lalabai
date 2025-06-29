@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import DOMPurify from 'dompurify';
 import { Input } from '@heroui/react';
+import { IoSend } from 'react-icons/io5';
 
 type Message = {
   id: string;
@@ -314,12 +315,19 @@ export default function ConversationPage() {
         <div className="max-w-4xl mx-auto">
           <Input
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onValueChange={(e: string) => setInputValue(e)}
             placeholder="Type your message..."
             size="lg"
             variant="bordered"
             endContent={
-              <button className="text-blue-500 hover:text-blue-600 font-medium px-2">Send</button>
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  console.log('send');
+                }}
+              >
+                <IoSend size={20} />
+              </div>
             }
           />
         </div>

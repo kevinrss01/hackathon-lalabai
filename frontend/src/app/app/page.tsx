@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ChatInputMic from '@/components/app/ChatInputMic';
 import { useRouter } from 'next/navigation';
 import { wait } from '@/utils/utils';
+import { Input } from '@heroui/react';
 
 const AppPage = () => {
   const [isRequestSuccess, setIsRequestSuccess] = useState<boolean>(false);
