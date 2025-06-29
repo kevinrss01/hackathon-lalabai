@@ -1,6 +1,7 @@
 import { Agent, run, webSearchTool } from '@openai/agents';
 import { config } from '../config/config';
 import { instructions } from './prompts/instructions';
+import { SocketIOService } from './socketio.service';
 
 // Set the OpenAI API key globally
 if (config.openai.apiKey) {
@@ -9,30 +10,31 @@ if (config.openai.apiKey) {
 
 export class AgentService {
   private agent: Agent;
+  private socketIOService = SocketIOService.getInstance();
 
   constructor() {
     this.agent = new Agent({
       name: 'Travel Research Assistant',
       model: 'o4-mini',
-      tools: [webSearchTool()],
+      tools: [
+        webSearchTool({
+          searchContextSize: 'low',
+        }),
+      ],
       instructions: instructions.travelAgent,
-    });
-
-    this.agent.on('agent_start', (_, agent) => {
-      console.log(`[${agent.name}] started`);
-    });
-
-    this.agent.on('agent_end', (_, output) => {
-      console.log(`[${this.agent.name}] produced:`, output);
     });
   }
 
   /**
    * Research travel information based on a user prompt
    * @param prompt - The travel query string (e.g., "I want to go from Paris to London on December 15th")
+   * @param conversationId - Optional conversation ID for WebSocket updates
    * @returns Comprehensive travel information with sources
    */
-  async researchTravel(prompt: string): Promise<{
+  async researchTravel(
+    prompt: string,
+    conversationId?: string
+  ): Promise<{
     response: string;
     sources?: string[];
   }> {
@@ -41,16 +43,31 @@ export class AgentService {
       console.log(`📝 User prompt: "${prompt}"`);
       console.log('⏳ Processing...\n');
 
-      // Run the agent
-      console.log('🤖 Agent is thinking...');
+      // Send progress update if conversationId is provided
+      if (conversationId) {
+        this.socketIOService.sendProgress(
+          conversationId,
+          'The agent is looking for the best options...'
+        );
+      }
+
       const startTime = Date.now();
 
       const result = await run(this.agent, prompt);
+
+      console.log('Result:', result);
 
       const endTime = Date.now();
       const duration = ((endTime - startTime) / 1000).toFixed(2);
 
       console.log(`\n✅ Agent completed in ${duration} seconds`);
+
+      if (conversationId) {
+        this.socketIOService.sendProgress(
+          conversationId,
+          'Travel research completed. Formatting results...'
+        );
+      }
 
       const response = result.finalOutput || 'No travel information could be generated.';
       const sources = this.extractSources(response);

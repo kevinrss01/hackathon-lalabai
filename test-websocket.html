@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <title>WebSocket Test</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  </head>
+  <body>
+    <h1>WebSocket Connection Test</h1>
+    <div id="status">Disconnected</div>
+    <button onclick="joinRoom()">Join Room</button>
+    <div id="messages"></div>
+
+    <script>
+      const socket = io("http://localhost:4000", {
+        transports: ["websocket", "polling"],
+      });
+
+      const conversationId = "test-conversation-123";
+      const statusDiv = document.getElementById("status");
+      const messagesDiv = document.getElementById("messages");
+
+      function addMessage(msg) {
+        const p = document.createElement("p");
+        p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        messagesDiv.appendChild(p);
+      }
+
+      socket.on("connect", () => {
+        statusDiv.textContent = "Connected";
+        addMessage("Connected to server");
+      });
+
+      socket.on("disconnect", () => {
+        statusDiv.textContent = "Disconnected";
+        addMessage("Disconnected from server");
+      });
+
+      socket.on("room-joined", (data) => {
+        addMessage(`Room joined: ${JSON.stringify(data)}`);
+      });
+
+      socket.on("agent-progress", (data) => {
+        addMessage(`Progress: ${data.message}`);
+      });
+
+      socket.on("agent-response", (data) => {
+        addMessage(`Final Response: ${data.message}`);
+      });
+
+      socket.on("agent-error", (data) => {
+        addMessage(`Error: ${data.error}`);
+      });
+
+      function joinRoom() {
+        socket.emit("join-room", conversationId);
+        addMessage(`Attempting to join room: ${conversationId}`);
+      }
+
+      // Auto-join on connect
+      socket.on("connect", () => {
+        setTimeout(joinRoom, 1000);
+      });
+    </script>
+  </body>
+</html>

@@ -1,13 +1,22 @@
 import dotenv from 'dotenv';
+import { createServer } from 'http';
 import app from './app';
 import { config } from './config/config';
+import { SocketIOService } from './services/socketio.service';
 
 // Load environment variables
 dotenv.config();
 
 const PORT = config.port || 4000;
 
-const server = app.listen(PORT, () => {
+// Create HTTP server
+const httpServer = createServer(app);
+
+// Initialize Socket.IO
+const socketIOService = SocketIOService.getInstance();
+socketIOService.initialize(httpServer);
+
+const server = httpServer.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
   console.log(`⚡️[server]: Environment: ${config.env}`);
 });

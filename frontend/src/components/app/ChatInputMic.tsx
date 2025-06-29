@@ -3,8 +3,17 @@ import React from 'react';
 import { displayToast } from '@/utils/sonnerToast';
 import { PlaceholdersAndVanishInput } from '../landing-page/vanish-input';
 import { FaMicrophone } from 'react-icons/fa';
+import { wait } from '@/utils/utils';
 
-const ChatInputMic = ({ placeholders }: { placeholders: string[] }) => {
+const ChatInputMic = ({
+  placeholders,
+  setIsRequestSuccess,
+  setConversationId,
+}: {
+  placeholders: string[];
+  setIsRequestSuccess: (isRequestSuccess: boolean) => void;
+  setConversationId?: (conversationId: string) => void;
+}) => {
   const [data, setData] = React.useState('');
   const [recording, setRecording] = React.useState(false);
   const [transcription, setTranscription] = React.useState(false);
@@ -22,13 +31,16 @@ const ChatInputMic = ({ placeholders }: { placeholders: string[] }) => {
       e.preventDefault();
       if (!data.trim()) return;
 
+      await wait(1000);
+
       setTranscription(true);
+      const userMessage = data.trim();
 
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transcribe`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_BACKEND}/api/transcribe`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ data: data.trim() }),
+          body: JSON.stringify({ data: userMessage }),
         });
 
         if (!res.ok) {
@@ -36,6 +48,13 @@ const ChatInputMic = ({ placeholders }: { placeholders: string[] }) => {
         }
 
         const result = await res.json();
+
+        if (result.conversationId) {
+          sessionStorage.setItem(`initial-message-${result.conversationId}`, userMessage);
+          setConversationId?.(result.conversationId);
+          setIsRequestSuccess(true);
+        }
+
         console.log('Text submission result:', result);
         setData('');
       } catch (error) {
@@ -47,7 +66,7 @@ const ChatInputMic = ({ placeholders }: { placeholders: string[] }) => {
         setTranscription(false);
       }
     },
-    [data]
+    [data, setIsRequestSuccess, setConversationId]
   );
 
   const startRecording = async () => {
@@ -81,7 +100,7 @@ const ChatInputMic = ({ placeholders }: { placeholders: string[] }) => {
       try {
         const formData = new FormData();
         formData.append('audio', audioBlob, 'recording.webm');
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transcribe`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_BACKEND}/api/transcribe`, {
           method: 'POST',
           body: formData,
         });
@@ -92,6 +111,19 @@ const ChatInputMic = ({ placeholders }: { placeholders: string[] }) => {
 
         const result = await response.json();
         console.log('Audio transcription result:', result);
+
+        const thereIsAnInitialMessageInSessionStorage = sessionStorage.getItem(
+          `initial-message-${result.conversationId}`
+        );
+
+        if (result.conversationId && !thereIsAnInitialMessageInSessionStorage) {
+          sessionStorage.setItem(
+            `initial-message-${result.conversationId}`,
+            result.initialMessage || '[Audio message]'
+          );
+          setConversationId?.(result.conversationId);
+          setIsRequestSuccess(true);
+        }
 
         displayToast.success('Audio message sent successfully!');
       } catch (error) {

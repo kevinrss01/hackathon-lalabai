@@ -24,3 +24,4 @@ alwaysApply: true
 - Fully leverage the new features of Next.js version 15.
 - Make full use of Tailwind CSS version 4 features: https://tailwindcss.com/blog/tailwindcss-v4
 - Do not overengineer—always choose simple, short, and concise solutions.
+- DO NOT add useless comments in the code.

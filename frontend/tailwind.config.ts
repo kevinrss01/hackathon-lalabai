@@ -48,6 +48,7 @@ module.exports = {
     require('tailwindcss-motion'),
     require('tailwindcss-animate'),
     require('@headlessui/tailwindcss'),
+    require('@tailwindcss/typography'),
     heroui(),
   ],
 };

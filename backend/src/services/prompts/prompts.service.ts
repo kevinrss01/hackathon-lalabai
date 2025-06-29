@@ -66,13 +66,14 @@ export class PromptsService {
       """
 
       ### USER QUERY TO TRANSFORM ###
+      Note: This is plain text from the user, not HTML.
       """
       ${userQuery}
       """
 
       ---
 
-      RETURN ONLY the response nothing else, no json, no string, no quotes, no commentary, no markdown, no html, no code, no anything else, just the response.
+      RETURN ONLY the plain text response, nothing else. No JSON, no quotes, no commentary, no markdown, no HTML, no code blocks, just the plain text response.
 `;
   }
 
@@ -82,7 +83,7 @@ export class PromptsService {
   ): string {
     return `
       ### TASK ###
-      Transform the detailed travel agent response into a comprehensive, user-friendly travel guide that helps the user prepare and execute their trip with confidence.
+      Transform the detailed travel agent response into a comprehensive, user-friendly travel guide formatted in HTML that helps the user prepare and execute their trip with confidence.
 
       ### CONTEXT ###
       Original User Query: """
@@ -90,10 +91,10 @@ export class PromptsService {
       """
 
       ### INSTRUCTIONS ###
-      1. **Be Comprehensive**: Provide ALL essential information for a stress-free trip
-      2. **Prioritize Clarity**: Use clear sections and formatting for easy reference
-      3. **Include Actionable Links**: Provide direct booking links and official websites
-      4. **Add Preparation Details**: Help user prepare with checklists and tips
+      1. **Output Format**: Generate clean, semantic HTML without any markdown
+      2. **Be Comprehensive**: Provide ALL essential information for a stress-free trip
+      3. **Prioritize Clarity**: Use HTML elements and CSS classes for structure
+      4. **Include Actionable Links**: Provide direct booking links with proper <a> tags
       5. **Personal & Reassuring Tone**: Use "you" language and reassuring phrases
       6. **Anticipate Concerns**: Address common travel worries proactively
       7. **Mobile-Friendly Format**: Structure for easy reading on phones
@@ -155,43 +156,49 @@ export class PromptsService {
       - Community forums/groups
       - Real-time tracking tools
 
-      ### FORMATTING REQUIREMENTS ###
-      - Use clear section headers with emojis
-      - Bullet points for scannable information
-      - **Bold** for critical information (prices, times, links)
-      - 🔗 Actual clickable links (not just website names)
-      - ⚠️ Warning icons for important notices
-      - ✨ Tips in friendly, encouraging tone
-      - Tables for comparing multiple options
-      - Expandable sections for detailed info (indicate with ▼)
+      ### HTML FORMATTING REQUIREMENTS ###
+      - Use <h2>, <h3>, <h4> for section headers with emojis
+      - Use <ul> and <li> for bullet points
+      - Use <strong> or <b> for critical information (prices, times, links)
+      - Use <a href="URL" target="_blank"> for clickable links
+      - Use <span> or <div> with emojis for warning icons
+      - Use <p> tags for paragraphs and tips
+      - Use <table>, <tr>, <td> for comparing options
+      - Use proper semantic HTML5 elements
+      - Do NOT use markdown syntax (no **, no ##, no - for lists)
+      - Do NOT wrap the response in code blocks or backticks
 
       ### EXAMPLE TRANSFORMATION ###
 
       For a query about "cheap travel from Paris to London in 2 days":
 
       Output:
-      """
-      🎉 **Excellent timing!** I've found several great options for your Paris to London trip in 2 days. Don't worry - this route is one of Europe's easiest international journeys, and I'll guide you through everything!
+      <div>
+        <p>🎉 <strong>Excellent timing!</strong> I've found several great options for your Paris to London trip in 2 days. Don't worry - this route is one of Europe's easiest international journeys, and I'll guide you through everything!</p>
 
-      ## 🚆 **YOUR BEST TRAVEL OPTIONS**
+        <h2>🚆 YOUR BEST TRAVEL OPTIONS</h2>
 
-      ### 1. **Eurostar Train** ⭐ RECOMMENDED
-      - 💰 **Price**: €52-78 (booking today) | €120-200 (last minute)
-      - ⏰ **Duration**: 2h 15min direct
-      - 📍 **Route**: Paris Gare du Nord → London St Pancras
-      - 🔗 **Book at**: [eurostar.com](https://www.eurostar.com)
-      - ✅ **Pros**: Fastest, city center to city center, comfortable, reliable
-      - ❌ **Cons**: More expensive than bus, fixed departure times
-      - 💡 **Best for**: Time-conscious travelers, business trips, comfort seekers
+        <h3>1. Eurostar Train ⭐ RECOMMENDED</h3>
+        <ul>
+          <li>💰 <strong>Price</strong>: €52-78 (booking today) | €120-200 (last minute)</li>
+          <li>⏰ <strong>Duration</strong>: 2h 15min direct</li>
+          <li>📍 <strong>Route</strong>: Paris Gare du Nord → London St Pancras</li>
+          <li>🔗 <strong>Book at</strong>: <a href="https://www.eurostar.com" target="_blank">eurostar.com</a></li>
+          <li>✅ <strong>Pros</strong>: Fastest, city center to city center, comfortable, reliable</li>
+          <li>❌ <strong>Cons</strong>: More expensive than bus, fixed departure times</li>
+          <li>💡 <strong>Best for</strong>: Time-conscious travelers, business trips, comfort seekers</li>
+        </ul>
 
-      ### 2. **Bus** (FlixBus/BlaBlaBus) 💸 BUDGET CHOICE
-      - 💰 **Price**: €25-35 | Sometimes as low as €15
-      - ⏰ **Duration**: 7-9 hours (includes ferry crossing)
-      - 📍 **Route**: Paris Bercy → London Victoria Coach Station
-      - 🔗 **Book at**: [flixbus.com](https://www.flixbus.com) or [blablabus.com](https://www.blablabus.com)
-      - ✅ **Pros**: Very cheap, multiple daily departures, scenic ferry crossing
-      - ❌ **Cons**: Long journey, less comfortable, possible delays
-      - 💡 **Best for**: Budget travelers, flexible schedules, adventure seekers
+        <h3>2. Bus (FlixBus/BlaBlaBus) 💸 BUDGET CHOICE</h3>
+        <ul>
+          <li>💰 <strong>Price</strong>: €25-35 | Sometimes as low as €15</li>
+          <li>⏰ <strong>Duration</strong>: 7-9 hours (includes ferry crossing)</li>
+          <li>📍 <strong>Route</strong>: Paris Bercy → London Victoria Coach Station</li>
+          <li>🔗 <strong>Book at</strong>: <a href="https://www.flixbus.com" target="_blank">flixbus.com</a> or <a href="https://www.blablabus.com" target="_blank">blablabus.com</a></li>
+          <li>✅ <strong>Pros</strong>: Very cheap, multiple daily departures, scenic ferry crossing</li>
+          <li>❌ <strong>Cons</strong>: Long journey, less comfortable, possible delays</li>
+          <li>💡 <strong>Best for</strong>: Budget travelers, flexible schedules, adventure seekers</li>
+        </ul>
 
       ### 3. **Flight** ✈️
       - 💰 **Price**: €45-90 (budget airlines) + €15-50 (baggage)
@@ -330,7 +337,11 @@ export class PromptsService {
 
      ---
 
-     RETURN ONLY the formatted response. Make sure all links are real and functional. Do not include any meta-commentary or markdown code blocks.
+     RETURN ONLY the HTML formatted response. Make sure all links are real and functional with proper <a> tags. 
+     Do NOT include any markdown syntax (no **, no ##, no [link](url) format).
+     Do NOT wrap the response in code blocks or backticks.
+     Do NOT include any meta-commentary.
+     Output pure HTML that can be directly rendered.
 `;
   }
 }
