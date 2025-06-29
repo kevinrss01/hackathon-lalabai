@@ -4,6 +4,7 @@ import { displayToast } from '@/utils/sonnerToast';
 import { PlaceholdersAndVanishInput } from '../landing-page/vanish-input';
 import { FaMicrophone } from 'react-icons/fa';
 import { wait } from '@/utils/utils';
+import { FaSquare } from 'react-icons/fa';
 
 const ChatInputMic = ({
   placeholders,
@@ -168,7 +169,7 @@ const ChatInputMic = ({
         disabled={transcription}
         onPress={handleRecording}
         isIconOnly
-        className={`w-12 h-12 min-w-12 rounded-3xl relative right-[60px] ${
+        className={`w-[45px] h-[45px] min-w-[45px] rounded-3xl relative right-[65px] ${
           recording
             ? 'bg-red-500 hover:bg-red-600'
             : transcription
@@ -176,10 +177,12 @@ const ChatInputMic = ({
               : 'bg-black hover:bg-gray-800'
         }`}
       >
-        {recording || transcription ? (
-          <Spinner color="white" size="md" />
+        {recording ? (
+          <FaSquare color="white" size={16} />
+        ) : transcription ? (
+          <Spinner />
         ) : (
-          <FaMicrophone className="text-white text-lg" />
+          <FaMicrophone color="white" size={16} />
         )}
       </Button>
     </>
