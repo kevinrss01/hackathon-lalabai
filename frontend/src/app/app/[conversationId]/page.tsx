@@ -42,7 +42,7 @@ function ChatBubble({ message }: { message: Message }) {
           ease: 'easeOut',
         }}
       >
-        <div className={`text-xs text-gray-500 mb-1 ${user ? 'text-right' : 'text-left'}`}>
+        <div className={`text-[11px] text-gray-500 mb-1 ${user ? 'text-right' : 'text-left'}`}>
           {user ? 'You' : 'Assistant'}
         </div>
 
@@ -51,7 +51,7 @@ function ChatBubble({ message }: { message: Message }) {
             px-4 py-3 rounded-2xl max-w-full break-words
             ${
               user
-                ? 'bg-blue-500 text-white rounded-br-sm'
+                ? 'bg-blue-50 text-blue-900 border border-blue-200 rounded-br-sm'
                 : message.isProgress
                   ? 'bg-gray-50 text-gray-600 border border-gray-200 rounded-bl-sm'
                   : 'bg-gray-100 text-gray-900 rounded-bl-sm'
@@ -60,7 +60,7 @@ function ChatBubble({ message }: { message: Message }) {
         >
           {message.type === 'audio' ? (
             <div className="flex items-center gap-2">
-              <MicrophoneIcon className={`w-5 h-5 ${user ? 'text-white' : 'text-gray-600'}`} />
+              <MicrophoneIcon className={`w-5 h-5 ${user ? 'text-blue-700' : 'text-gray-600'}`} />
               <span className="text-sm" aria-label="Audio message">
                 Audio message
               </span>
@@ -111,15 +111,16 @@ function ChatBubble({ message }: { message: Message }) {
                   prose prose-sm max-w-none
                   ${
                     user
-                      ? 'text-gray-900'
-                      : 'prose-gray prose-p:text-gray-900 prose-headings:text-gray-900 prose-strong:text-gray-900 prose-a:text-blue-600 prose-code:text-gray-800'
+                      ? 'prose-blue prose-p:text-blue-900 prose-headings:text-blue-900 prose-strong:text-blue-900 prose-a:text-blue-700 prose-code:text-blue-800 prose-code:bg-blue-900/10'
+                      : 'prose-gray prose-p:text-gray-900 prose-headings:text-gray-900 prose-strong:text-gray-900 prose-a:text-blue-600 prose-code:text-gray-800 prose-code:bg-black/10'
                   }
-                  prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-1 
-                  prose-headings:my-2 prose-headings:font-semibold
-                  prose-code:bg-black/10 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+                  prose-p:my-3 prose-ul:my-3 prose-ol:my-3 prose-li:my-2 
+                  prose-headings:my-3 prose-headings:font-semibold
+                  prose-code:px-1 prose-code:py-0.5 prose-code:rounded
                   prose-pre:bg-gray-100 prose-pre:text-gray-800
                   prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4
                   prose-img:rounded-lg prose-img:shadow-md
+                  prose-hr:my-4
                 `}
               />
             </div>
